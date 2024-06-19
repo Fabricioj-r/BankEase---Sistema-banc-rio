@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Bancário</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Sistema Bancário</h1>
+    <hr>
+    <hr>
+    <button class="button" onclick="showDeposito()">Depositar</button>
+    <button class="button" onclick="showSaque()">Sacar</button>
+    <button class="button" onclick="showExtrato()">Extrato</button>
+    <button class="button" onclick="sair()">Sair</button>
+
+    <div class="output" id="output"></div>
+</div>
+
+<script>
+    let saldo = 0;
+    let limite = 500;
+    let extrato = "";
+    let numero_saques = 0;
+    const LIMITE_SAQUES = 3;
+
+    function showDeposito() {
+        const valor = parseFloat(prompt("Informe o valor do depósito:"));
+        if (valor > 0) {
+            saldo += valor;
+            extrato += `Depósito: R$ ${valor.toFixed(2)}\n`;
+            document.getElementById('output').innerText = `Depósito de R$ ${valor.toFixed(2)} realizado com sucesso!`;
+        } else {
+            document.getElementById('output').innerText = "Operação falhou! O valor informado é inválido.";
+        }
+    }
+
+    function showSaque() {
+        const valor = parseFloat(prompt("Informe o valor do saque:"));
+        const excedeu_saldo = valor > saldo;
+        const excedeu_limite = valor > limite;
+        const excedeu_saques = numero_saques >= LIMITE_SAQUES;
+
+        if (excedeu_saldo) {
+            document.getElementById('output').innerText = "Operação falhou! Você não tem saldo suficiente.";
+        } else if (excedeu_limite) {
+            document.getElementById('output').innerText = "Operação falhou! O valor do saque excede o limite.";
+        } else if (excedeu_saques) {
+            document.getElementById('output').innerText = "Operação falhou! Número máximo de saques excedido.";
+        } else if (valor > 0) {
+            saldo -= valor;
+            extrato += `Saque: R$ ${valor.toFixed(2)}\n`;
+            numero_saques += 1;
+            document.getElementById('output').innerText = `Saque de R$ ${valor.toFixed(2)} realizado com sucesso!`;
+        } else {
+            document.getElementById('output').innerText = "Operação falhou! O valor informado é inválido.";
+        }
+    }
+
+    function showExtrato() {
+        const extratoText = extrato || "Não foram realizadas movimentações.";
+        document.getElementById('output').innerText = `Extrato:\n${extratoText}\n\nSaldo: R$ ${saldo.toFixed(2)}`;
+    }
+
+    function sair() {
+        document.getElementById('output').innerText = "Obrigado por utilizar nosso sistema bancário!";
+    }
+</script>
+
+</body>
+</html>
